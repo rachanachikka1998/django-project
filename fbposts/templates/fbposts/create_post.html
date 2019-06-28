@@ -1,0 +1,9 @@
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="text" name="user_id" placeholder="user_id">
+    <input type="text" name="post_content" placeholder="post_content">
+    <input type="submit" value="Submit">
+</form>
+{% if submitted %}
