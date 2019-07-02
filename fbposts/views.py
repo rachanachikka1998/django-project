@@ -143,6 +143,9 @@ def get_reaction_details(id_object, type):
     reactions["count"] = count
     reactions["type"] = final
     return reactions
+def get_post_comments(post):
+    comments = Comment.objects.filter(id1=)
+    comments = Comment.objects.filter(id1=id_object)
 
 
 def get_comments(id_object, type):
@@ -278,15 +281,15 @@ def add_new_reaction(user, id_object, reaction_type, type):
     if type == 'post':
         reaction = Reaction()
         reaction.reactor = user
-        reaction.post_field = id_object
-        reaction.comment_field = None
+        reaction.post = id_object
+        reaction.comment = None
         reaction.reaction_type = reaction_type
         reaction.save()
     else:
         reaction = Reaction()
         reaction.reactor = user
-        reaction.post_field = None
-        reaction.comment_field = id_object
+        reaction.post = None
+        reaction.comment = id_object
         reaction.reaction_type = reaction_type
         reaction.save()
 
