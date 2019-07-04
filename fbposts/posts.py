@@ -34,16 +34,13 @@ def get_post(post_id):
 
 
 def create_post(user_id, post_content):
-    try:
-        post = Post.objects.create(posted_by_id=user_id, post_content=post_content)
-    except User.DoesNotExist:
-        raise Exception("enter valid user_id")
+    post = Post.objects.create(posted_by_id=user_id, post_content=post_content)
     return post.id
 
 
+# correction
 def get_user_posts(user_id):
-    user = User.objects.get(pk=user_id)
-    posts = user.posts.all()
+    posts = Post.objects.filter(posted_by_id=user_id)
     return [
         get_post_by_object(post)
         for post in posts
@@ -65,8 +62,7 @@ def get_posts_with_more_positive_reactions():
 
 
 def get_posts_reacted_by_user(user_id):
-    user = User.objects.get(pk=user_id)
-    reactions_by_user = user.reactions.all().filter(~(Q(post=None))).select_related('post')
+    reactions_by_user = Reaction.objects.filter(~(Q(post=None)), reactor_id=user_id).select_related('post')
 
     return [
         get_post_by_object(reaction.post)

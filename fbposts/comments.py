@@ -3,13 +3,7 @@ from fbposts.views import get_user_to_dict
 
 
 def add_comment(post_id, comment_user_id, comment_text):
-    try:
-        comment = Comment.objects.create(post_id=post_id, commenter_id=comment_user_id, comment_content=comment_text)
-    except User.DoesNotExist:
-        return "enter appropriate user_id"
-    except Post.DoesNotExist:
-        return "enter appropriate post id"
-
+    comment = Comment.objects.create(post_id=post_id, commenter_id=comment_user_id, comment_content=comment_text)
     return comment.id
 
 
