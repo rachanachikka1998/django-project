@@ -1,61 +1,47 @@
 from django.db import models
-import django
 
 
 # Create your models here.
 class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50)
-    pic_url = models.CharField(max_length=5000)
+    username = models.CharField(max_length=100)
+    pic_url = models.URLField()
 
 
 class Post(models.Model):
-    post_id = models.AutoField(primary_key=True)
-    posted_by = models.ForeignKey('User', on_delete=models.CASCADE, default=None)
-    post_content = models.CharField(max_length=10000, default=None)
-    posted_at = models.DateTimeField(default=None)
+    posted_by = models.ForeignKey('User', on_delete=models.CASCADE,related_name="posts")
+    post_content = models.TextField()
+    posted_at = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
-    comment_id = models.AutoField(primary_key=True)
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True)
-    comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-    comment_content = models.CharField(max_length=10000)
-    commenter_id = models.ForeignKey('User', on_delete=models.CASCADE)
-    commented_at=models.DateTimeField(null=True)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True,related_name="comments")
+    comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='+')
+    comment_content = models.TextField()
+    commenter = models.ForeignKey('User', on_delete=models.CASCADE,related_name="comments")
+    commented_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        if self.post is None:
-            if self.comment is not None:
-                models.Model.save(self)
-        elif self.comment is None:
-            if self.post is not None:
-                models.Model.save(self)
-        else:
-            print("check post and comment conflicts")
+        are_both_comment_and_post_none = self.comment is None and self.post is None
+        are_both_comment_and_post_not_none = self.comment is not None and self.post is not None
+        if are_both_comment_and_post_none or are_both_comment_and_post_not_none:
+            raise Exception("give appropriate post and comment ids")
+        super(Comment, self).save()
 
 
 class Reaction(models.Model):
-    reactions=(('HAHA', 'HAHA'), ('LIKE', 'LIKE'), ('LOVE', 'LOVE'), ('WOW', 'WOW'), ('SAD', 'SAD'), ('ANGRY', 'ANGRY'))
-    reaction_type = models.CharField(max_length=5,choices=reactions)
-    reactor = models.ForeignKey('User', on_delete=models.CASCADE)
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True)
-    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
-    types=(('post','post'),('comment','comment'))
-    type=models.CharField(max_length=7,choices=types)
+    reactions = (
+        ('HAHA', 'HAHA'), ('LIKE', 'LIKE'), ('LOVE', 'LOVE'), ('WOW', 'WOW'), ('SAD', 'SAD'), ('ANGRY', 'ANGRY'))
+    reaction_type = models.CharField(max_length=5, choices=reactions)
+    reactor = models.ForeignKey('User', on_delete=models.CASCADE,related_name="reactions")
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True, related_name="reactions")
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True, related_name="reactions")
 
     def save(self, *args, **kwargs):
-        if self.post is None:
-            if self.comment is not None:
-                models.Model.save(self)
-        elif self.comment is None:
-            if self.post is not None:
-                models.Model.save(self)
-        else:
-            print("check post and comment conflicts")
+        are_both_comment_and_post_none = self.comment is None and self.post is None
+        are_both_comment_and_post_not_none = self.comment is not None and self.post is not None
+        if are_both_comment_and_post_none or are_both_comment_and_post_not_none:
+            raise Exception("give appropriate post and comment ids")
+        super(Reaction, self).save()
 
     class Meta:
-        unique_together=(("post_field", "comment_field", "reactor"),)
-
-
-
+        unique_together = (("post", "reactor"), ("comment", "reactor"),)
