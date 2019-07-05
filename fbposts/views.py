@@ -6,10 +6,16 @@ from .models import User
 
 
 def get_user_to_dict(user_object):
+    from django.db import connection
+
+
+    initial_queries = len(connection.queries)
     user = dict()
     user["user_id"] = user_object.id
     user["name"] = user_object.username
     user["profile_pic_url"] = user_object.pic_url
+    final_queries = len(connection.queries)
+    print("get comments sub call", final_queries - initial_queries)
     return user
 
 

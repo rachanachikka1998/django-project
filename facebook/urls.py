@@ -19,7 +19,7 @@ from fbposts import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('get_user/<int:user_id>',views.get_user,name='get_user'),
+    #path('get_user/<int:user_id>',views.get_user,name='get_user'),
   #  path('create_post', views.create_post, name='create_post')
 
 ]
