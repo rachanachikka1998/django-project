@@ -1,7 +1,5 @@
-from django.db.models import Prefetch
-
-from fbposts.models import Comment, Reaction, Post
-from fbposts.reactions import get_reaction_details
+from fbposts.models import Comment
+from fbposts.reactions import get_all_comments_reaction_details
 from fbposts.views import get_user_to_dict
 
 
@@ -24,23 +22,24 @@ def reply_to_comment(comment_id, reply_user_id, reply_text):
 
 
 def get_replies_for_comment(comment_id):
-    from django.db import connection
-    initial_queries = len(connection.queries)
-    comment = Comment.objects.all().filter(pk=comment_id).prefetch_related('reactions','replies','replies__reactions','commenter','replies__commenter')
-    replies = get_comments(comment[0].replies.all())
+    comment = Comment.objects.all().filter(pk=comment_id).prefetch_related('reactions', 'replies', 'replies__reactions',
+
+                                                                           'commenter', 'replies__commenter')
+    replies = comment[0].replies.all()
+    replies_ids = []
+    for reply in replies:
+        replies_ids.append(reply.id)
+    comment_reactions = get_all_comments_reaction_details(replies_ids)
+    replies = get_comments(comment[0].replies.all(), comment_reactions)
+
     for r in replies:
         del r["reactions"]
-    final_queries = len(connection.queries)
-    print("get_post_by_object:", final_queries - initial_queries)
+
     return replies
 
 
-def get_comments(comments,reactions):
-    from django.db import connection
-
-
+def get_comments(comments, reactions):
     list_of_comments = []
-    initial_queries = len(connection.queries)
 
     for comment in comments:
 
@@ -51,26 +50,11 @@ def get_comments(comments,reactions):
         comment_dict["commented_at"] = comment.commented_at.strftime("%y-%m-%d %H:%M:%S.%f")
 
         comment_dict["comment_content"] = comment.comment_content
-        comment_dict["reactions"] = get_reaction_details(reactions.filter(comment=comment))
+        comment_dict["reactions"] = reactions[comment.id]
         if comment.post is not None:
-            replies = get_comments(comment.replies.all(),reactions)
+            replies = get_comments(comment.replies.all(), reactions)
             comment_dict["replies_count"] = len(replies)
             comment_dict["replies"] = replies
         list_of_comments.append(comment_dict)
-    final_queries = len(connection.queries)
-    print("get comments", final_queries - initial_queries)
-
 
     return list_of_comments
-
-
-def get_post_comments(post):
-    from django.db import connection
-    initial_queries = len(connection.queries)
-
-    comments = post.comments.all().select_related('commenter') .prefetch_related('replies__reactions', 'reactions', 'replies__commenter','replies')
-
-    final_queries = len(connection.queries)
-    result=get_comments(comments)
-    print("get post comments", final_queries - initial_queries)
-    return result

@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="041ef1e7-d6be-4117-aa8c-a562408636a0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/django-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/django-project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/FBPOSTS_CHECK-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/FBPOSTS_CHECK-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FBPOSTS_CHECK.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/FBPOSTS_CHECK.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Untitled7.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Untitled7.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Untitled8.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Untitled8.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/facebook/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/facebook/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fbposts/comments.py" beforeDir="false" afterPath="$PROJECT_DIR$/fbposts/comments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fbposts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/fbposts/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fbposts/posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/fbposts/posts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fbposts/reactions.py" beforeDir="false" afterPath="$PROJECT_DIR$/fbposts/reactions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fbposts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/fbposts/views.py" afterDir="false" />
@@ -25,7 +24,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fbposts/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
+            <state relative-caret-position="525">
               <caret line="35" column="100" selection-start-line="35" selection-start-column="100" selection-end-line="35" selection-end-column="100" />
             </state>
           </provider>
@@ -34,8 +33,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fbposts/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="34" lean-forward="true" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
+            <state relative-caret-position="180">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -46,8 +45,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fbposts/reactions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="373">
-              <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+            <state relative-caret-position="-198">
+              <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -58,8 +57,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fbposts/posts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="119" lean-forward="true" selection-start-line="119" selection-end-line="119" />
+            <state relative-caret-position="207">
+              <caret line="109" column="15" lean-forward="true" selection-start-line="109" selection-start-column="15" selection-end-line="109" selection-end-column="15" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -70,20 +69,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fbposts/comments.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="55" column="66" selection-start-line="55" selection-start-column="66" selection-end-line="55" selection-end-column="66" />
+            <state relative-caret-position="345">
+              <caret line="23" column="40" lean-forward="true" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
               <folding>
-                <element signature="e#0#37#0" expanded="true" />
+                <element signature="e#1#51#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/facebook/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="29" lean-forward="true" selection-start-column="29" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -110,7 +100,6 @@
       <find>index</find>
       <find>get_reactio</find>
       <find>get_post_re</find>
-      <find>get_post_comments</find>
       <find>more</find>
       <find>get_reaction_metrics</find>
       <find>post_reaction</find>
@@ -127,6 +116,7 @@
       <find>get_u</find>
       <find>get_user_to_dict</find>
       <find>get comments</find>
+      <find>get_post_comments</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -137,9 +127,9 @@
       <list>
         <option value="$PROJECT_DIR$/fbposts/urls.py" />
         <option value="$PROJECT_DIR$/fbposts/constants.py" />
-        <option value="$PROJECT_DIR$/fbposts/views.py" />
         <option value="$PROJECT_DIR$/facebook/urls.py" />
         <option value="$PROJECT_DIR$/fbposts/models.py" />
+        <option value="$PROJECT_DIR$/fbposts/views.py" />
         <option value="$PROJECT_DIR$/fbposts/comments.py" />
         <option value="$PROJECT_DIR$/fbposts/posts.py" />
         <option value="$PROJECT_DIR$/fbposts/reactions.py" />
@@ -165,11 +155,6 @@
               <item name="django-project" type="b2602c69:ProjectViewProjectNode" />
               <item name="django-project" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="django-project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django-project" type="462c0819:PsiDirectoryNode" />
-              <item name="fbposts" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -178,7 +163,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/learning/practice_problems/Django/django_db_practice.md" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -210,7 +195,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18797815" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18797815" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -221,7 +206,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.36285096" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.3629301" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32937366" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -295,52 +280,52 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fbposts/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
+        <state relative-caret-position="525">
           <caret line="35" column="100" selection-start-line="35" selection-start-column="100" selection-end-line="35" selection-end-column="100" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fbposts/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="34" lean-forward="true" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/facebook/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret column="29" lean-forward="true" selection-start-column="29" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fbposts/comments.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="55" column="66" selection-start-line="55" selection-start-column="66" selection-end-line="55" selection-end-column="66" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+          <caret column="29" selection-start-column="29" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fbposts/posts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="119" lean-forward="true" selection-start-line="119" selection-end-line="119" />
+        <state relative-caret-position="207">
+          <caret line="109" column="15" lean-forward="true" selection-start-line="109" selection-start-column="15" selection-end-line="109" selection-end-column="15" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/fbposts/comments.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="40" lean-forward="true" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
+          <folding>
+            <element signature="e#1#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fbposts/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fbposts/reactions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="373">
-          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+        <state relative-caret-position="-198">
+          <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
