@@ -8,11 +8,10 @@ def react_to_post(user_id, post_id, reaction_type):
     reactions_list = [Reactions.LIKE.value, Reactions.LOVE.value, Reactions.HAHA.value, Reactions.WOW.value,
                       Reactions.SAD.value, Reactions.ANGRY.value]
     if reaction_type not in reactions_list:
-        return "enter appropriate reaction"
+        raise (ValueError)
 
-    try:
-        user_reaction = Reaction.objects.get(post_id=post_id, reactor_id=user_id)
-    except Reaction.DoesNotExist:
+    user_reaction = Reaction.objects.filter(post_id=post_id, reactor_id=user_id)
+    if len(user_reaction) == 0:
         Reaction.objects.create(reactor_id=user_id, post_id=post_id, reaction_type=reaction_type)
         return
     delete_or_update_user_reaction(user_reaction, reaction_type)
@@ -22,21 +21,23 @@ def react_to_comment(user_id, comment_id, reaction_type):
     reactions_list = [Reactions.LIKE.value, Reactions.LOVE.value, Reactions.HAHA.value, Reactions.WOW.value,
                       Reactions.SAD.value, Reactions.ANGRY.value]
     if reaction_type not in reactions_list:
-        return "enter appropriate reaction"
+        raise (ValueError)
 
-    try:
-        user_reaction = Reaction.objects.get(comment_id=comment_id, reactor_id=user_id)
-    except Reaction.DoesNotExist:
+    user_reaction = Reaction.objects.filter(comment_id=comment_id, reactor_id=user_id)
+    if len(user_reaction) == 0:
         Reaction.objects.create(reactor_id=user_id, comment_id=comment_id, reaction_type=reaction_type)
         return
     delete_or_update_user_reaction(user_reaction, reaction_type)
 
 
 def delete_or_update_user_reaction(user_reaction, reaction_type):
-    if user_reaction.reaction_type == reaction_type:
+    if user_reaction.values('reaction_type')[0]["reaction_type"] == reaction_type:
+        print(True)
         user_reaction.delete()
     else:
+
         user_reaction.update(reaction_type=reaction_type)
+
 
 
 def get_reaction_details(reactions):
@@ -48,12 +49,11 @@ def get_reaction_details(reactions):
 
 
 def get_reaction_metrics(post_id):
-
     result = Reaction.objects.all().filter(post__id=post_id).values('reaction_type').annotate(count=Count('post'))
     reactions_dict = dict()
     for res in result:
         reactions_dict[res['reaction_type']] = res['count']
-    
+
     return reactions_dict
 
 

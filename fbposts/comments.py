@@ -4,11 +4,15 @@ from fbposts.views import get_user_to_dict
 
 
 def add_comment(post_id, comment_user_id, comment_text):
+    if comment_text == "":
+        raise (ValueError)
     comment = Comment.objects.create(post_id=post_id, commenter_id=comment_user_id, comment_content=comment_text)
     return comment.id
 
 
 def reply_to_comment(comment_id, reply_user_id, reply_text):
+    if reply_text == "":
+        raise (ValueError)
     parent_comment = Comment.objects.select_related('comment').get(pk=comment_id)
     new_comment = Comment()
     if parent_comment.post is None:

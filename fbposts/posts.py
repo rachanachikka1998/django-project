@@ -24,7 +24,10 @@ def get_post_by_object(post, reactions, comment_reactions):
 
 
 def delete_post(post_id):
-    Post.objects.filter(pk=post_id).delete()
+    post= Post.objects.filter(pk=post_id)
+    if len(post)==0:
+        raise (Post.DoesNotExist)
+    post.delete()
     # post.delete()
 
 
@@ -41,6 +44,8 @@ def get_post(post_id):
 
 
 def create_post(user_id, post_content):
+    if post_content == "" :
+        raise(ValueError)
     post = Post.objects.create(posted_by_id=user_id, post_content=post_content)
     return post.id
 
@@ -107,11 +112,11 @@ def get_posts_reacted_by_user(user_id):
                                                                                                              'comments__replies__reactions',
                                                                                                              'comments__commenter',
                                                                                                              'comments__replies__commenter')
-    post_ids=[]
-    comment_ids=[]
+    post_ids = []
+    comment_ids = []
     for post in posts:
         post_ids.append(post.id)
-        comment_ids+=get_all_comment_ids_for_post(post)
+        comment_ids += get_all_comment_ids_for_post(post)
 
     post_reactions = get_all_posts_reaction_details(post_ids)
     comment_reactions = get_all_comments_reaction_details(comment_ids)
