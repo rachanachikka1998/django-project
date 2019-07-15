@@ -372,45 +372,74 @@ def test_get_post_returns_same_values_in_db(
     assert post.post_content == post_json["post_content"]
     assert post.posted_at.strftime("%y-%m-%d %H:%M:%S.%f") == post_json["posted_at"]
 
-    reactions = Reaction.objects.filter(post_id=1)
-    comments = Comment.objects.filter(post_id=1)
+    reactions = Reaction.objects.filter(post_id=1).order_by('id')
+    comments = Comment.objects.filter(post_id=1).order_by('id')
 
     db_reaction_list = []
-    json_reaction_list = []
     for reaction in reactions:
         db_reaction_list.append(reaction.reaction_type)
-        json_reaction_list(post_json["reactions"]["type"])
+    json_reaction_list = (post_json["reactions"]["type"])
+    db_reaction_list = list(dict.fromkeys(db_reaction_list))
     assert db_reaction_list == json_reaction_list
 
     assert len(reactions) == post_json["reactions"]["count"]
     assert len(comments) == post_json["comments_count"]
 
+    comments_json_list = []
     for comment_json, comment in zip(post_json["comments"], comments):
-        assert comment.id == comment_json["comment_id"]
-        assert comment.commenter_id == comment_json["commenter"]["user_id"]
-        assert comment.commented_at.strftime("%y-%m-%d %H:%M:%S.%f") == comment_json["commented_at"]
 
-        reactions = Reaction.objects.filter(comment_id=comment.id)
-        replies = Comment.objects.filter(comment_id=comment.id)
+        comments_db_json = dict()
+        comments_db_json["comment_id"] = comment.id
+        comments_db_json["commenter"] = dict()
+        comments_db_json["commenter"]["user_id"] = comment.commenter_id
+        comments_db_json["commenter"]["name"] = comment.commenter.username
+        comments_db_json["commenter"]["profile_pic_url"] = comment.commenter.pic_url
+        comments_db_json["commented_at"] = comment.commented_at.strftime("%y-%m-%d %H:%M:%S.%f")
+        comments_db_json["comment_content"] = comment.comment_content
 
+        reactions = Reaction.objects.filter(comment_id=comment.id).order_by('id')
+        replies = Comment.objects.filter(comment_id=comment.id).order_by('id')
+
+        db_reaction_list = []
         for reaction in reactions:
-            assert reaction.reaction_type in comment_json["reactions"]["type"]
+            db_reaction_list.append(reaction.reaction_type)
+        db_reaction_list = list(dict.fromkeys(db_reaction_list))
 
-        assert len(reactions) == comment_json["reactions"]["count"]
-        assert comment_json["replies_count"] == len(replies)
+        comments_db_json["reactions"] = dict()
 
+        comments_db_json["reactions"]["type"] = db_reaction_list
+        comments_db_json["reactions"]["count"] = len(reactions)
+
+        comments_db_json["replies_count"] = len(replies)
+
+        replies_json_list = []
         for reply, reply_json in zip(replies, comment_json["replies"]):
-            assert reply.id == reply_json["comment_id"]
-            assert reply.commenter_id == reply_json["commenter"]["user_id"]
-            assert reply.commented_at.strftime("%y-%m-%d %H:%M:%S.%f") == reply_json["commented_at"]
-            assert reply.comment_content == reply_json["comment_content"]
 
-            reactions = Reaction.objects.filter(comment_id=reply.id)
+            replies_db_json = dict()
+            replies_db_json["comment_id"] = reply.id
+            replies_db_json["commenter"] = dict()
+            replies_db_json["commenter"]["user_id"] = reply.commenter_id
+            replies_db_json["commenter"]["name"] = reply.commenter.username
+            replies_db_json["commenter"]["profile_pic_url"] = reply.commenter.pic_url
+            replies_db_json["commented_at"] = reply.commented_at.strftime("%y-%m-%d %H:%M:%S.%f")
+            replies_db_json["comment_content"] = reply.comment_content
+
+            reactions = Reaction.objects.filter(comment_id=reply.id).order_by('id')
+
+            db_reaction_list = []
 
             for reaction in reactions:
-                assert reaction.reaction_type in reply_json["reactions"]["type"]
+                db_reaction_list.append(reaction.reaction_type)
+            db_reaction_list = list(dict.fromkeys(db_reaction_list))
 
-            assert len(reactions) == reply_json["reactions"]["count"]
+            replies_db_json["reactions"] = dict()
+            replies_db_json["reactions"]["count"] = len(reactions)
+            replies_db_json["reactions"]["type"] = db_reaction_list
+
+            replies_json_list.append(replies_db_json)
+        comments_db_json["replies"] = replies_json_list
+        comments_json_list.append(comments_db_json)
+    assert comments_json_list == post_json["comments"]
 
 
 @pytest.mark.django_db
