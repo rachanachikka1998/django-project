@@ -7,10 +7,14 @@
     "title": "fbposts API",
     "description": "Describing api for each function"
   },
+
+
   "schemes": [
     "https",
     "http"
   ],
+
+
   "securityDefinitions": {
     "oauth": {
       "tokenUrl": "http://auth.ibtspl.com/oauth2/",
@@ -25,7 +29,79 @@
       "type": "oauth2"
     }
   },
+
+
   "definitions": {
+    "ReactedUser": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/User"
+        },
+        {
+           "type": "object",
+      "properties": {
+        "reaction": {
+          "type": "string",
+          "enum":  [
+              "LIKE",
+              "LOVE",
+              "HAHA",
+              "WOW",
+              "SAD",
+              "ANGRY"
+            ]
+        }
+
+      }
+        }
+      ]
+
+    },
+    "ReactionAndCount": {
+      "type": "object",
+      "properties": {
+        "type": {
+           "type": "string",
+          "enum":  [
+              "LIKE",
+              "LOVE",
+              "HAHA",
+              "WOW",
+              "SAD",
+              "ANGRY"
+            ]
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Reply": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "commenter": {
+          "$ref": "#/definitions/User"
+        },
+        "commented_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment_content": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "comment_id",
+        "commenter",
+        "commented_at",
+        "comment_content"
+      ]
+    },
     "PostContent": {
       "type": "object",
       "properties": {
@@ -85,32 +161,21 @@
       ]
     },
     "Comment": {
-      "type": "object",
-      "properties": {
-        "comment_id": {
-          "type": "integer",
-          "format": "int64'"
+      "allOf": [
+        {
+          "$ref": "#/definitions/Reply"
         },
-        "commenter": {
-          "$ref": "#/definitions/User"
-        },
-        "commented_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "comment_content": {
-          "type": "string"
-        },
-        "reactions": {
+        {
           "type": "object",
-          "$ref": "#/definitions/ReactionDetails"
+          "properties": {
+            "reactions": {
+              "type": "object",
+              "$ref": "#/definitions/ReactionDetails"
+            }
+          }
         }
-      },
+      ],
       "required": [
-        "comment_id",
-        "commenter",
-        "commented_at",
-        "comment_content",
         "reactions"
       ]
     },
@@ -186,6 +251,8 @@
       ]
     }
   },
+
+
   "parameters": {
     "CreatePostParameter": {
       "name": "new post",
@@ -196,23 +263,41 @@
       },
       "required": true
     },
-    "UserIdPathParameter": {
-      "name": "userid",
+    "PostIdPathParameter": {
+      "name": "postid",
       "in": "path",
-      "description": "user id of the user of whose to retrieve posts ",
+      "description": "post id",
       "type": "integer",
       "format": "int64",
       "required": true
     },
-    "PostIdPathParameter": {
-      "name": "postid",
+    "CommentIdPathParameter": {
+      "name": "commentid",
       "in": "path",
-      "description": "get post of the post id mentioned in the path",
+      "description": "comment id",
       "type": "integer",
       "format": "int64",
       "required": true
+    },
+    "CommentContentParameter": {
+      "name": "comment_content",
+      "in": "body",
+      "description": "add comment to post",
+      "schema": {
+        "properties": {
+          "comment_content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "comment_content"
+        ]
+      },
+      "required": true
     }
   },
+
+
   "responses": {
     "CreatePostResponse": {
       "description": "successfully created",
@@ -235,7 +320,7 @@
         "$ref": "#/definitions/Post"
       }
     },
-    "GetUserPostsResponse": {
+    "ListOfPostsResponse": {
       "description": "get posts of the user of whose userid mentioned in url",
       "schema": {
         "type": "array",
@@ -243,8 +328,53 @@
           "$ref": "#/definitions/Post"
         }
       }
+    },
+    "ListOfRepliesResponse": {
+      "description": "replies for a comment",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Reply"
+        }
+      }
+    },
+    "AddCommentResponse": {
+      "description": "created comment successfully",
+      "schema": {
+        "properties": {
+          "comment_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "comment_id"
+        ]
+      }
+    },
+    "GetReactionsResponse": {
+      "description": "successfully retrieved reactions",
+      "schema": {
+        "type": "array",
+        "items":{
+          "$ref": "#/definitions/ReactedUser"
+        }
+      }
+    },
+    "GetReactionMetricsResponse": {
+      "description": "successfully retrieved reaction metrics",
+      "schema":
+      {
+        "type": "array",
+        "items":
+        {
+          "$ref": "#/definitions/ReactionAndCount"
+        }
+      }
     }
   },
+
+
   "paths": {
     "/post/v1/": {
       "post": {
@@ -288,9 +418,123 @@
             "$ref": "#/responses/GetPostResponse"
           }
         }
+      },
+      "delete": {
+        "operationId": "get_post",
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetPostResponse"
+          }
+        }
       }
     },
-    "/user/{userid}/posts/v1": {
+    "/posts/v1": {
+      "get": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully deleted"
+          }
+        }
+      }
+    },
+    "/posts/most_positively_reacted/v1": {
+      "get": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/ListOfPostsResponse"
+          }
+        }
+      }
+    },
+    "/posts/reacted/v1": {
+      "get": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/ListOfPostsResponse"
+          }
+        }
+      }
+    },
+    "/posts/{postid}/comments/v1": {
+      "post": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostIdPathParameter"
+          },
+          {
+            "$ref": "#/parameters/CommentContentParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/AddCommentResponse"
+          }
+        }
+      }
+    },
+    "/comments/{commentid}/replies/v1": {
+      "post": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommentIdPathParameter"
+          },
+          {
+            "$ref": "#/parameters/CommentContentParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/AddCommentResponse"
+          }
+        }
+      },
       "get": {
         "security": [
           {
@@ -301,15 +545,100 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/UserIdPathParameter"
+            "$ref": "#/parameters/CommentIdPathParameter"
           }
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/GetUserPostsResponse"
+            "$ref": "#/responses/ListOfRepliesResponse"
           }
         }
       }
+    },
+    "/posts/{postid}/reactions/v1": {
+      "post": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully reacted to post"
+        }
+      }
+    },
+    "get": {
+      "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+      "parameters": [
+          {
+            "$ref": "#/parameters/PostIdPathParameter"
+          }
+        ],
+      "responses": {
+        "200": {
+           "$ref": "#/responses/GetReactionsResponse"
+        }
+
+      }
+    }
+    },
+    "/comments/{comment}/reactions/v1": {
+      "post": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommentIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+           "description": "successfully reacted to comment"
+        }
+      }
+    }
+    },
+    "/posts/{postid}/reaction_metrics/v1": {
+      "get": {
+      "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+      "parameters": [
+          {
+            "$ref": "#/parameters/PostIdPathParameter"
+          }
+        ],
+      "responses": {
+        "200": {
+           "$ref": "#/responses/GetReactionMetricsResponse"
+        }
+
+      }
+    }
+    }
     }
   }
 }
