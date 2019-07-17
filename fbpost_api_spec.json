@@ -53,7 +53,7 @@
     }
   },
   "paths": {
-    "/create_post/": {
+    "/post/create/": {
       "post": {
         "operationId": "create_post",
         "parameters": [
