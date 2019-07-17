@@ -70,13 +70,15 @@
       "name": "offset",
       "in": "query",
       "description": "offset for persons",
-      "type": "integer"
+      "type": "integer",
+      "required": true
     },
     "GetPersonsLimitParameter": {
       "name": "limit",
       "in": "query",
       "description": "limit of persons per page",
-      "type": "integer"
+      "type": "integer",
+      "required": true
     },
     "UsernamePathParameter": {
       "name": "username",
@@ -91,9 +93,9 @@
       "description": "replace person details",
       "schema": {
         "$ref": "#/definitions/UserDetails"
-      }
+      },
+      "required": true
     }
-
   },
   "responses": {
     "GetPersonsResponse": {
@@ -162,6 +164,9 @@
           }
         ],
         "parameters": [
+          {
+            "$ref": "#/parameters/UsernamePathParameter"
+          },
           {
             "$ref": "#/parameters/PutPersonDetailsParameter"
           }
