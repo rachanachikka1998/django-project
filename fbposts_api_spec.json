@@ -140,29 +140,18 @@
         "replies"
       ]
     },
-    "PostId": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "required": [
-        "post_id"
-      ]
-    },
     "Post": {
       "allOf": [
-        {
-          "$ref": "#/definitions/PostId"
-        },
         {
           "$ref": "#/definitions/PostContent"
         },
         {
           "type": "object",
           "properties": {
+            "post_id": {
+              "type": "integer",
+              "format": "int64"
+            },
             "posted_by": {
               "type": "object",
               "$ref": "#/definitions/User"
@@ -207,19 +196,18 @@
       },
       "required": true
     },
-    "GetPostParameter": {
-      "name": "get post",
-      "in": "body",
-      "description": "get post details ,given the post id",
-      "schema": {
-        "$ref": "#/definitions/PostId"
-      },
-      "required": true
-    },
     "UserIdPathParameter": {
       "name": "userid",
       "in": "path",
       "description": "user id of the user of whose to retrieve posts ",
+      "type": "integer",
+      "format": "int64",
+      "required": true
+    },
+    "PostIdPathParameter": {
+      "name": "postid",
+      "in": "path",
+      "description": "get post of the post id mentioned in the path",
       "type": "integer",
       "format": "int64",
       "required": true
@@ -278,7 +266,9 @@
             "$ref": "#/responses/CreatePostResponse"
           }
         }
-      },
+      }
+    },
+    "/posts/{postid}/v1": {
       "get": {
         "operationId": "get_post",
         "security": [
@@ -290,7 +280,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/GetPostParameter"
+            "$ref": "#/parameters/PostIdPathParameter"
           }
         ],
         "responses": {
