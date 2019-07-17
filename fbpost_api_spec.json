@@ -17,7 +17,7 @@
       "properties": {
         "user_id": {
           "type": "string"
-},
+        },
         "post_content": {
           "type": "string"
         }
@@ -45,15 +45,13 @@
       "schema": {
         "type": "object",
         "properties": {
-          "post_id":{
+          "post_id": {
             "type": "string"
           }
         }
       }
-
     }
   },
-
   "paths": {
     "/create_post/": {
       "post": {
@@ -68,7 +66,6 @@
             "$ref": "#/responses/CreatePostResponse"
           }
         }
-
       }
     }
   }
