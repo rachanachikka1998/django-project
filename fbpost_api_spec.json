@@ -11,19 +11,30 @@
     "https",
     "http"
   ],
+  "securityDefinitions": {
+    "oauth": {
+      "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+      "flow": "password",
+      "scopes": {
+        "read": "read posts",
+        "write": "create posts",
+        "update": "update posts",
+        "delete": "delete posts",
+        "superuser": "super user permission"
+      },
+      "type": "oauth2"
+    }
+  },
   "definitions": {
     "CreatePost": {
       "type": "object",
       "properties": {
-        "user_id": {
-          "type": "string"
-        },
+
         "post_content": {
           "type": "string"
         }
-      }
+      },
       "required": [
-        "user_id",
         "post_content"
       ]
     }
@@ -46,9 +57,13 @@
         "type": "object",
         "properties": {
           "post_id": {
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
-        }
+        },
+        "required": [
+          "post_id"
+        ]
       }
     }
   },
@@ -56,6 +71,13 @@
     "/post/create/": {
       "post": {
         "operationId": "create_post",
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/CreatePostParameter"
