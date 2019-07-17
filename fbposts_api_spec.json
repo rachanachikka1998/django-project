@@ -215,6 +215,14 @@
         "$ref": "#/definitions/PostId"
       },
       "required": true
+    },
+    "UserIdPathParameter": {
+      "name": "userid",
+      "in": "path",
+      "description": "user id of the user of whose to retrieve posts ",
+      "type": "integer",
+      "format": "int64",
+      "required": true
     }
   },
   "responses": {
@@ -237,6 +245,15 @@
       "description": "successfully retrieved post",
       "schema": {
         "$ref": "#/definitions/Post"
+      }
+    },
+    "GetUserPostsResponse": {
+      "description": "get posts of the user of whose userid mentioned in url",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Post"
+        }
       }
     }
   },
@@ -279,6 +296,27 @@
         "responses": {
           "200": {
             "$ref": "#/responses/GetPostResponse"
+          }
+        }
+      }
+    },
+    "/user/{userid}/posts/v1": {
+      "get": {
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetUserPostsResponse"
           }
         }
       }
