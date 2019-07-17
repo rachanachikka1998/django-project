@@ -26,26 +26,178 @@
     }
   },
   "definitions": {
-    "CreatePost": {
+    "PostContent": {
+      "type": "string"
+    },
+    "User": {
       "type": "object",
       "properties": {
-
-        "post_content": {
+        "user_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "profile_pic_url": {
           "type": "string"
         }
       },
       "required": [
-        "post_content"
+        "user_id",
+        "name",
+        "profile_pic_url"
+      ],
+    },
+    "Reaction": {
+      "type": "string",
+      "enum": [
+        "LIKE",
+        "LOVE",
+        "HAHA",
+        "WOW",
+        "SAD",
+        "ANGRY"
+      ]
+    },
+    "ReactionDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Reaction"
+          }
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "type",
+        "count"
+      ]
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "type": "integer",
+          "format": "int64'"
+        },
+        "commenter": {
+          "$ref": "#/definitions/User"
+        },
+        "commented_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment_content": {
+          "type": "string"
+        },
+        "reactions": {
+          "type": "object",
+          "$ref": "#/definitions/ReactionDetails"
+        }
+      },
+      "required": [
+        "comment_id",
+        "commenter",
+        "commented_at",
+        "comment_content",
+        "reactions"
+      ]
+    },
+    "CommentWithReplies": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Comment"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "replies_count": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "replies": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Comment"
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "replies_count",
+        "replies"
+      ]
+    },
+    "PostId": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "Post": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PostId"
+        },
+        {
+          "$ref": "#/definitions/PostContent"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "posted_by": {
+              "type": "object",
+              "$ref": "#/definitions/User"
+            },
+            "posted_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "reactions": {
+              "type": "object",
+              "$ref": "#/definitions/ReactionDetails"
+            },
+            "comments": {
+              "type": "array",
+              "$ref": "#/definitions/CommentWithReplies"
+            },
+            "comment_count": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      ],
+      "required": [
+        "posted_by",
+        "posted_at",
+        "reactions",
+        "comments",
+        "comment_count"
       ]
     }
   },
   "parameters": {
     "CreatePostParameter": {
-      "name": "newpost",
+      "name": "new post",
       "in": "body",
       "description": "user id and post content for creating post",
       "schema": {
-        "$ref": "#/definitions/CreatePost"
+        "$ref": "#/definitions/PostContent"
+      },
+      "required": true
+    },
+    "GetPostParameter": {
+      "name": "get post",
+      "in": "body",
+      "description": "get post details ,given the post id",
+      "schema": {
+        "$ref": "#/definitions/PostId"
       },
       "required": true
     }
@@ -64,6 +216,13 @@
         "required": [
           "post_id"
         ]
+      }
+
+    },
+    "GetPostResponse": {
+      "description": "successfully retrieved post",
+      "schema": {
+        "$ref": "#/definitions/Post"
       }
     }
   },
@@ -88,6 +247,22 @@
             "$ref": "#/responses/CreatePostResponse"
           }
         }
+      }
+    },
+    "/post/get/": {
+      "get": {
+        "operationId": "get_post",
+        "parameters": [
+          {
+            "$ref": "#/parameters/GetPostParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetPostResponse",
+          }
+        }
+
       }
     }
   }
