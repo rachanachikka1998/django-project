@@ -1,0 +1,75 @@
+{
+  "swagger": "2.0",
+  "host": "localhost:8000",
+  "basePath": "/api/",
+  "info": {
+    "version": "1.0.0",
+    "title": "fbposts API",
+    "description": "Describing api for each function"
+  },
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "definitions": {
+    "CreatePost": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+},
+        "post_content": {
+          "type": "string"
+        }
+      }
+      "required": [
+        "user_id",
+        "post_content"
+      ]
+    }
+  },
+  "parameters": {
+    "CreatePostParameter": {
+      "name": "newpost",
+      "in": "body",
+      "description": "user id and post content for creating post",
+      "schema": {
+        "$ref": "#/definitions/CreatePost"
+      },
+      "required": true
+    }
+  },
+  "responses": {
+    "CreatePostResponse": {
+      "description": "successfully created",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "post_id":{
+            "type": "string"
+          }
+        }
+      }
+
+    }
+  },
+
+  "paths": {
+    "/create_post/": {
+      "post": {
+        "operationId": "create_post",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CreatePostParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/CreatePostResponse"
+          }
+        }
+
+      }
+    }
+  }
+}
