@@ -1,184 +1,198 @@
 {
-    "swagger": "2.0",
-    "host": "localhost:8000",
-    "basePath": "/api/",
-    "info": {
-        "version": "1.0.0",
-        "title": "Sample API",
-        "description": "Try outs"
-    },
-    "schemes": [
-        "https",
-        "http"
-    ],
-    "securityDefinitions": {
-        "oauth": {
-            "tokenUrl": "http://auth.ibtspl.com/oauth2/",
-            "flow": "password",
-            "scopes": {
-                "read": "read users",
-                "write": "create users",
-                "update": "update users",
-                "delete": "delete users",
-                "superuser": "super user permission"
-            },
-            "type": "oauth2"
-        }
-    },
-    "definitions": {
-        "User": {
-            "type": "object",
-            "properties": {
-                "firstName": {
-                    "type": "string"
-                },
-                "lastName": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "age": {
-                    "type": "integer",
-                    "format": "int64"
-                }
-            },
-            "required": [
-                "firstName",
-                "lastName",
-                "username",
-                "age"
-            ]
-        }
-
-    },
-    "paths": {
-      "/persons/": {
-            "get": {
-              "operationId": "get_persons",
-              "summary": "get all persons",
-              "parameters": [
-                {
-                  "name": "offset",
-                  "in": "query",
-                  "description": "offset for persons",
-                  "type": "integer"
-                },
-                {
-                  "name": "limit",
-                  "in": "query",
-                  "description": "limit of persons per page",
-                  "type": "integer"
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "successfully collected persons",
-                  "schema": {
-                     "type": "object",
-                     "properties": {
-                       "persons": {
-                           "type": "array",
-                           "items": {
-                             "$ref": "#/definitions/User"
-                           }
-                        }
-                      }
-                  }
-                }
-              }
-            }
+  "swagger": "2.0",
+  "host": "localhost:8000",
+  "basePath": "/api/",
+  "info": {
+    "version": "1.0.0",
+    "title": "Sample API",
+    "description": "Try outs"
+  },
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "securityDefinitions": {
+    "oauth": {
+      "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+      "flow": "password",
+      "scopes": {
+        "read": "read users",
+        "write": "create users",
+        "update": "update users",
+        "delete": "delete users",
+        "superuser": "super user permission"
       },
-      "/person/{username}/": {
-            "get": {
-              "operationId": "get_user",
-              "summary": "get user by username",
-              "parameters": [
-                {
-                "name":"username",
-                "in":"path",
-                "description": "username",
-                "type": "string",
-                "required": true
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "successfully retrieved user object",
-                  "schema": {
-                    "$ref": "#/definitions/User"
-                  }
-                }
-              }
-
-            },
-        "put": {
-          "operationId": "put_person_details",
-          "security": [
-                    {
-                        "oauth": [
-                            "superuser"
-                        ]
-                    }
-                ],
-          "parameters": [
-            {
-              "name": "person_details",
-              "in": "body",
-              "description": "replace person details",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "firstName": {
-                    "type": "string"
-                  },
-                  "lastName": {
-                     "type": "string"
-                  },
-                  "age": {
-                    "type": "integer",
-                    "format": "int64"
-                  }
-                },
-                "required": [
-                  "firstName",
-                  "lastName",
-                  "age"
-                ]
-              }
-            }
-          ],
-          "responses": {
-            "202": {
-              "description": "replaced user details successfully"
-            }
-          }
+      "type": "oauth2"
+    }
+  },
+  "definitions": {
+    "UserDetails": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
         },
-        "delete": {
-          "summary": "deleting user specified in path",
-          "security": [
-                    {
-                        "oauth": [
-                            "superuser"
-                        ]
-                    }
-                ],
-          "operationId": "",
-          "parameters": [
-            {
-              "name":"username",
-              "in":"path",
-              "description": "username",
-              "type": "string",
-              "required": true
+        "lastName": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "firstName",
+        "lastName",
+        "age"
+      ]
+    },
+    "User": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UserDetails"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
             }
-          ],
-          "responses": {
-            "202": {
-              "description": "object successfully deleted"
+          },
+          "required": [
+            "username"
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "GetPersonsOffsetParameter": {
+      "name": "offset",
+      "in": "query",
+      "description": "offset for persons",
+      "type": "integer"
+    },
+    "GetPersonsLimitParameter": {
+      "name": "limit",
+      "in": "query",
+      "description": "limit of persons per page",
+      "type": "integer"
+    },
+    "UsernamePathParameter": {
+      "name": "username",
+      "in": "path",
+      "description": "username",
+      "type": "string",
+      "required": true
+    },
+    "PutPersonDetailsParameter": {
+      "name": "person_details",
+      "in": "body",
+      "description": "replace person details",
+      "schema": {
+        "$ref": "#/definitions/UserDetails"
+      }
+    }
+
+  },
+  "responses": {
+    "GetPersonsResponse": {
+      "description": "successfully collected persons",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "persons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/User"
             }
           }
         }
       }
+    },
+    "GetUserResponse": {
+      "description": "successfully retrieved user object",
+      "schema": {
+        "$ref": "#/definitions/User"
+      }
     }
+  },
+  "paths": {
+    "/persons/": {
+      "get": {
+        "operationId": "get_persons",
+        "summary": "get all persons",
+        "parameters": [
+          {
+            "$ref": "#/parameters/GetPersonsOffsetParameter"
+          },
+          {
+            "$ref": "#/parameters/GetPersonsLimitParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetPersonsResponse"
+          }
+        }
+      }
+    },
+    "/person/{username}/": {
+      "get": {
+        "operationId": "get_user",
+        "summary": "get user by username",
+        "parameters": [
+          {
+            "$ref": "#/parameters/UsernamePathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetUserResponse"
+          }
+        }
+      },
+      "put": {
+        "operationId": "put_person_details",
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/PutPersonDetailsParameter"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "replaced user details successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "deleting user specified in path",
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
+        "operationId": "delete_persons",
+        "parameters": [
+          {
+            "$ref": "#/parameters/UsernamePathParameter"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "object successfully deleted"
+          }
+        }
+      }
+    }
+  }
 }
