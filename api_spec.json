@@ -52,7 +52,6 @@
         }
 
     },
-
     "paths": {
       "/persons/": {
             "get": {
@@ -83,14 +82,12 @@
                            "items": {
                              "$ref": "#/definitions/User"
                            }
-
                         }
                       }
                   }
                 }
               }
             }
-
       },
       "/person/{username}/": {
             "get": {
@@ -169,25 +166,19 @@
           "operationId": "",
           "parameters": [
             {
-
               "name":"username",
               "in":"path",
               "description": "username",
               "type": "string",
               "required": true
             }
-
           ],
           "responses": {
             "202": {
               "description": "object successfully deleted"
             }
-
           }
         }
-
       }
-
-
     }
 }
