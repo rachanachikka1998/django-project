@@ -27,7 +27,15 @@
   },
   "definitions": {
     "PostContent": {
-      "type": "string"
+      "type": "object",
+      "properties": {
+        "post_content": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "post_content"
+      ]
     },
     "User": {
       "type": "object",
@@ -47,17 +55,6 @@
         "user_id",
         "name",
         "profile_pic_url"
-      ],
-    },
-    "Reaction": {
-      "type": "string",
-      "enum": [
-        "LIKE",
-        "LOVE",
-        "HAHA",
-        "WOW",
-        "SAD",
-        "ANGRY"
       ]
     },
     "ReactionDetails": {
@@ -66,7 +63,15 @@
         "type": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Reaction"
+            "type": "string",
+            "enum": [
+              "LIKE",
+              "LOVE",
+              "HAHA",
+              "WOW",
+              "SAD",
+              "ANGRY"
+            ]
           }
         },
         "count": {
@@ -136,8 +141,16 @@
       ]
     },
     "PostId": {
-      "type": "integer",
-      "format": "int64"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "post_id"
+      ]
     },
     "Post": {
       "allOf": [
@@ -164,7 +177,9 @@
             },
             "comments": {
               "type": "array",
-              "$ref": "#/definitions/CommentWithReplies"
+              "items": {
+                "$ref": "#/definitions/CommentWithReplies"
+              }
             },
             "comment_count": {
               "type": "integer",
@@ -217,7 +232,6 @@
           "post_id"
         ]
       }
-
     },
     "GetPostResponse": {
       "description": "successfully retrieved post",
@@ -227,7 +241,7 @@
     }
   },
   "paths": {
-    "/post/create/": {
+    "/post/v1/": {
       "post": {
         "operationId": "create_post",
         "security": [
@@ -247,11 +261,16 @@
             "$ref": "#/responses/CreatePostResponse"
           }
         }
-      }
-    },
-    "/post/get/": {
+      },
       "get": {
         "operationId": "get_post",
+        "security": [
+          {
+            "oauth": [
+              "superuser"
+            ]
+          }
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/GetPostParameter"
@@ -259,10 +278,9 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/GetPostResponse",
+            "$ref": "#/responses/GetPostResponse"
           }
         }
-
       }
     }
   }
