@@ -186,7 +186,7 @@
             ]
           }
         ],
-        "operationId": "delete_persons",
+        "operationId": "delete_person",
         "parameters": [
           {
             "$ref": "#/parameters/UsernamePathParameter"
