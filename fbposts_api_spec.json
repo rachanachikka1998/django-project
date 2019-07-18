@@ -7,14 +7,10 @@
     "title": "fbposts API",
     "description": "Describing api for each function"
   },
-
-
   "schemes": [
     "https",
     "http"
   ],
-
-
   "securityDefinitions": {
     "oauth": {
       "tokenUrl": "http://auth.ibtspl.com/oauth2/",
@@ -29,8 +25,6 @@
       "type": "oauth2"
     }
   },
-
-
   "definitions": {
     "ReactedUser": {
       "allOf": [
@@ -38,38 +32,36 @@
           "$ref": "#/definitions/User"
         },
         {
-           "type": "object",
-      "properties": {
-        "reaction": {
-          "type": "string",
-          "enum":  [
-              "LIKE",
-              "LOVE",
-              "HAHA",
-              "WOW",
-              "SAD",
-              "ANGRY"
-            ]
-        }
-
-      }
+          "type": "object",
+          "properties": {
+            "reaction": {
+              "type": "string",
+              "enum": [
+                "LIKE",
+                "LOVE",
+                "HAHA",
+                "WOW",
+                "SAD",
+                "ANGRY"
+              ]
+            }
+          }
         }
       ]
-
     },
     "ReactionAndCount": {
       "type": "object",
       "properties": {
         "type": {
-           "type": "string",
-          "enum":  [
-              "LIKE",
-              "LOVE",
-              "HAHA",
-              "WOW",
-              "SAD",
-              "ANGRY"
-            ]
+          "type": "string",
+          "enum": [
+            "LIKE",
+            "LOVE",
+            "HAHA",
+            "WOW",
+            "SAD",
+            "ANGRY"
+          ]
         },
         "count": {
           "type": "integer",
@@ -251,8 +243,6 @@
       ]
     }
   },
-
-
   "parameters": {
     "CreatePostParameter": {
       "name": "new post",
@@ -296,8 +286,6 @@
       "required": true
     }
   },
-
-
   "responses": {
     "CreatePostResponse": {
       "description": "successfully created",
@@ -356,25 +344,21 @@
       "description": "successfully retrieved reactions",
       "schema": {
         "type": "array",
-        "items":{
+        "items": {
           "$ref": "#/definitions/ReactedUser"
         }
       }
     },
     "GetReactionMetricsResponse": {
       "description": "successfully retrieved reaction metrics",
-      "schema":
-      {
+      "schema": {
         "type": "array",
-        "items":
-        {
+        "items": {
           "$ref": "#/definitions/ReactionAndCount"
         }
       }
     }
   },
-
-
   "paths": {
     "/post/v1/": {
       "post": {
@@ -435,13 +419,14 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/GetPostResponse"
+            "description": "post deleted successfully"
           }
         }
       }
     },
     "/posts/v1": {
       "get": {
+        "operationId": "get_user_posts",
         "security": [
           {
             "oauth": [
@@ -458,6 +443,7 @@
     },
     "/posts/most_positively_reacted/v1": {
       "get": {
+        "operationId": "get_more_positively_reacted_posts",
         "security": [
           {
             "oauth": [
@@ -474,6 +460,7 @@
     },
     "/posts/reacted/v1": {
       "get": {
+        "operationId": "get_posts_reacted_by_user",
         "security": [
           {
             "oauth": [
@@ -489,7 +476,9 @@
       }
     },
     "/posts/{postid}/comments/v1": {
+
       "post": {
+        "operationId": "add_comment",
         "security": [
           {
             "oauth": [
@@ -514,6 +503,7 @@
     },
     "/comments/{commentid}/replies/v1": {
       "post": {
+        "operationId": "add_reply_to_comment",
         "security": [
           {
             "oauth": [
@@ -536,6 +526,7 @@
         }
       },
       "get": {
+        "operationId": "get_replies_of_a_comment",
         "security": [
           {
             "oauth": [
@@ -557,6 +548,7 @@
     },
     "/posts/{postid}/reactions/v1": {
       "post": {
+        "operationId": "react_to_post",
         "security": [
           {
             "oauth": [
@@ -572,32 +564,33 @@
         "responses": {
           "200": {
             "description": "successfully reacted to post"
+          }
         }
-      }
-    },
-    "get": {
-      "security": [
+      },
+      "get": {
+        "operationId": "get_reaction_to_post",
+        "security": [
           {
             "oauth": [
               "superuser"
             ]
           }
         ],
-      "parameters": [
+        "parameters": [
           {
             "$ref": "#/parameters/PostIdPathParameter"
           }
         ],
-      "responses": {
-        "200": {
-           "$ref": "#/responses/GetReactionsResponse"
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetReactionsResponse"
+          }
         }
-
       }
-    }
     },
     "/comments/{comment}/reactions/v1": {
       "post": {
+        "operationId": "react_to_comment",
         "security": [
           {
             "oauth": [
@@ -612,33 +605,33 @@
         ],
         "responses": {
           "200": {
-           "description": "successfully reacted to comment"
+            "description": "successfully reacted to comment"
+          }
         }
       }
-    }
     },
     "/posts/{postid}/reaction_metrics/v1": {
       "get": {
-      "security": [
+        "operationId": "get_reaction_metrics_of_a_post",
+        "security": [
           {
             "oauth": [
               "superuser"
             ]
           }
         ],
-      "parameters": [
+        "parameters": [
           {
             "$ref": "#/parameters/PostIdPathParameter"
           }
         ],
-      "responses": {
-        "200": {
-           "$ref": "#/responses/GetReactionMetricsResponse"
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetReactionMetricsResponse"
+          }
         }
-
       }
-    }
-    }
     }
   }
 }
+
