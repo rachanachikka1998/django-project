@@ -404,7 +404,7 @@
         }
       },
       "delete": {
-        "operationId": "get_post",
+        "operationId": "delete_post",
         "security": [
           {
             "oauth": [
