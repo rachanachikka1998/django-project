@@ -26,33 +26,30 @@
     }
   },
   "definitions": {
-    "ReactedUser": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/User"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "reaction": {
-              "type": "string",
-              "enum": [
-                "LIKE",
-                "LOVE",
-                "HAHA",
-                "WOW",
-                "SAD",
-                "ANGRY"
-              ]
-            }
-          }
-        }
-      ]
-    },
-    "ReactionAndCount": {
+    "User": {
       "type": "object",
       "properties": {
-        "type": {
+        "user_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "profile_pic_url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id",
+        "name",
+        "profile_pic_url"
+      ]
+    },
+    "Reaction": {
+      "type": "object",
+      "properties": {
+        "reaction": {
           "type": "string",
           "enum": [
             "LIKE",
@@ -62,14 +59,42 @@
             "SAD",
             "ANGRY"
           ]
-        },
-        "count": {
-          "type": "integer",
-          "format": "int64"
         }
-      }
+      },
+      "required": [
+        "reaction"
+      ]
     },
-    "Reply": {
+    "ReactionWithUser": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/User"
+        },
+        {
+          "$ref": "#/definitions/Reaction"
+        }
+      ]
+    },
+    "ReactionAndCount": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Reaction"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "required": [
+            "count"
+          ]
+        }
+      ]
+    },
+    "CommentWithoutReactionDetails": {
       "type": "object",
       "properties": {
         "comment_id": {
@@ -105,26 +130,6 @@
         "post_content"
       ]
     },
-    "User": {
-      "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "profile_pic_url": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "user_id",
-        "name",
-        "profile_pic_url"
-      ]
-    },
     "ReactionDetails": {
       "type": "object",
       "properties": {
@@ -155,20 +160,11 @@
     "Comment": {
       "allOf": [
         {
-          "$ref": "#/definitions/Reply"
+          "$ref": "#/definitions/CommentWithoutReactionDetails"
         },
         {
-          "type": "object",
-          "properties": {
-            "reactions": {
-              "type": "object",
-              "$ref": "#/definitions/ReactionDetails"
-            }
-          }
+          "$ref": "#/definitions/ReactionDetails"
         }
-      ],
-      "required": [
-        "reactions"
       ]
     },
     "CommentWithReplies": {
@@ -189,12 +185,12 @@
                 "$ref": "#/definitions/Comment"
               }
             }
-          }
+          },
+          "required": [
+            "replies_count",
+            "replies"
+          ]
         }
-      ],
-      "required": [
-        "replies_count",
-        "replies"
       ]
     },
     "Post": {
@@ -210,7 +206,6 @@
               "format": "int64"
             },
             "posted_by": {
-              "type": "object",
               "$ref": "#/definitions/User"
             },
             "posted_at": {
@@ -218,7 +213,6 @@
               "format": "date-time"
             },
             "reactions": {
-              "type": "object",
               "$ref": "#/definitions/ReactionDetails"
             },
             "comments": {
@@ -231,15 +225,15 @@
               "type": "integer",
               "format": "int64"
             }
-          }
+          },
+          "required": [
+            "posted_by",
+            "posted_at",
+            "reactions",
+            "comments",
+            "comment_count"
+          ]
         }
-      ],
-      "required": [
-        "posted_by",
-        "posted_at",
-        "reactions",
-        "comments",
-        "comment_count"
       ]
     }
   },
@@ -305,10 +299,11 @@
     "GetPostResponse": {
       "description": "successfully retrieved post",
       "schema": {
+        "type": "object",
         "$ref": "#/definitions/Post"
       }
     },
-    "ListOfPostsResponse": {
+    "GetUserPostsResponse": {
       "description": "get posts of the user of whose userid mentioned in url",
       "schema": {
         "type": "array",
@@ -317,12 +312,21 @@
         }
       }
     },
-    "ListOfRepliesResponse": {
-      "description": "replies for a comment",
+    "MorePositivelyReactedPostsResponse": {
+      "description": "more positively reacted posts",
       "schema": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Reply"
+          "$ref": "#/definitions/Post"
+        }
+      }
+    },
+    "GetPostsReactedByUserResponse": {
+      "description": "posts reacted by user",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Post"
         }
       }
     },
@@ -340,12 +344,26 @@
         ]
       }
     },
-    "GetReactionsResponse": {
+    "AddReplyResponse": {
+      "description": "created comment successfully",
+      "schema": {
+        "properties": {
+          "comment_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "comment_id"
+        ]
+      }
+    },
+    "GetReactionsWithUserResponse": {
       "description": "successfully retrieved reactions",
       "schema": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ReactedUser"
+          "$ref": "#/definitions/ReactionWithUser"
         }
       }
     },
@@ -355,6 +373,15 @@
         "type": "array",
         "items": {
           "$ref": "#/definitions/ReactionAndCount"
+        }
+      }
+    },
+    "GetRepliesResponse": {
+      "description": "replies for a comment",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/CommentWithoutReactionDetails"
         }
       }
     }
@@ -424,7 +451,7 @@
         }
       }
     },
-    "/posts/v1": {
+    "/user/posts/v1": {
       "get": {
         "operationId": "get_user_posts",
         "security": [
@@ -436,7 +463,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successfully deleted"
+            "$ref": "#/responses/GetUserPostsResponse"
           }
         }
       }
@@ -453,7 +480,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/ListOfPostsResponse"
+            "$ref": "#/responses/MorePositivelyReactedPostsResponse"
           }
         }
       }
@@ -470,15 +497,14 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/ListOfPostsResponse"
+            "$ref": "#/responses/GetPostsReactedByUserResponse"
           }
         }
       }
     },
     "/posts/{postid}/comments/v1": {
-
       "post": {
-        "operationId": "add_comment",
+        "operationId": "add_comment_to_post",
         "security": [
           {
             "oauth": [
@@ -521,7 +547,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/AddCommentResponse"
+            "$ref": "#/responses/AddReplyResponse"
           }
         }
       },
@@ -541,7 +567,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/ListOfRepliesResponse"
+            "$ref": "#/responses/GetRepliesResponse"
           }
         }
       }
@@ -568,7 +594,7 @@
         }
       },
       "get": {
-        "operationId": "get_reaction_to_post",
+        "operationId": "get_reactions_to_post",
         "security": [
           {
             "oauth": [
@@ -583,7 +609,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/GetReactionsResponse"
+            "$ref": "#/responses/GetReactionsWithUserResponse"
           }
         }
       }
