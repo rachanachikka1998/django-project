@@ -588,7 +588,7 @@
         }
       }
     },
-    "/comments/{comment}/reactions/v1": {
+    "/comments/{commentid}/reactions/v1": {
       "post": {
         "operationId": "react_to_comment",
         "security": [
